@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Habibi Bakery</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Montserrat: lotin (ö ğ ş ç) va kirill harflari bilan -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261112m">
+</head>
+<body>
+  <!-- Matnlar data-i18n kalitlari orqali /api/i18n dan to'ldiriladi -->
+
+  <!-- ============ KUTIB OLISH (Asosiy) ============ -->
+  <section id="view-menu" class="view active home welcome">
+    <header class="w-head">
+      <div>
+        <h1 class="w-brand">Habibi Bakery <span>🥐</span></h1>
+        <p class="w-tag" data-i18n="app.welcome.tagline">Har kuni yangi va mazali!</p>
+      </div>
+      <div class="w-logo">🧁</div>
+    </header>
+
+    <div class="w-card">
+      <h2 class="w-hello" id="w-hello">Assalomu alaykum! ❤️</h2>
+      <p class="w-sub" id="w-sub">Mazali lahzalar <b class="brand-strong">Habibi Bakery</b> bilan boşlanadi ✨</p>
+    </div>
+
+    <div class="w-hero" id="w-hero"></div>
+
+    <div class="w-love">
+      <h2 data-i18n="app.welcome.love">Mehrli qöllar bilan ❤️</h2>
+      <ul class="taglines">
+        <li data-i18n="app.tagline.fresh">🥐 Mahsulotlarimiz har kuni sveji va naliçida ✨</li>
+        <li data-i18n="app.tagline.dastarkhan">🎂 Bayram va dasturxon uçun ham buyurtma olamiz ❤️</li>
+        <li data-i18n="app.tagline.hours">🕚 Buyurtmalar har kuni 11:00 dan 23:00 gaça 📲</li>
+      </ul>
+      <button class="w-cta" id="btn-browse" data-i18n="app.welcome.cta">Mahsulotlarni köriş →</button>
+    </div>
+  </section>
+
+  <!-- ============ KATEGORIYALAR ============ -->
+  <section id="view-catalog" class="view home">
+    <div class="sub-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="page-title" data-i18n="app.catalog">Mahsulotlar</h1>
+    </div>
+    <div id="closed-home" class="home-closed"></div>
+    <div id="cat-tiles" class="cat-tiles"></div>
+  </section>
+
+  <!-- ============ KATEGORIYA ICHIDAGI MAHSULOTLAR ============ -->
+  <section id="view-category" class="view home">
+    <div class="sub-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="page-title" id="category-title"></h1>
+    </div>
+    <p class="category-hint" id="category-hint"></p>
+    <main id="catalog" class="catalog"></main>
+  </section>
+
+  <!-- ============ SAVAT ============ -->
+  <section id="view-cart" class="view home cart-view">
+    <div class="cart-head">
+      <button class="sub-back" id="cart-back" aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="cart-title" data-i18n="app.cart">Savat</h1>
+      <button class="cart-clear" id="btn-clear" data-i18n="app.clear">Tozalaş</button>
+    </div>
+    <div id="cart-list"></div>
+    <div id="cart-summary"></div>
+  </section>
+
+  <!-- ============ RASMIYLASHTIRISH ============ -->
+  <section id="view-checkout" class="view home ck-view">
+    <div class="cart-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="cart-title" data-i18n="app.checkout">Rasmiylaştiriş</h1>
+      <span></span>
+    </div>
+
+    <form id="checkout-form" novalidate autocomplete="on">
+      <div class="ck-card" id="address-block">
+        <div class="ck-title"><span data-i18n="app.ck.address">📍 Yetkazib beriş manzili</span><em data-i18n="app.ck.required">majburiy</em></div>
+        <div class="addr-chips" id="saved-addrs" hidden></div>
+        <button type="button" class="ck-map" id="btn-map">
+          <span class="ck-map-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span>
+          <span class="ck-map-text"><b id="map-title"></b><small id="map-sub"></small></span>
+          <span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <input class="ck-input" id="address" autocomplete="street-address" data-i18n-ph="app.ck.street_ph" placeholder="Köça nomi, uy, xonadon (ixtiyoriy)">
+        <textarea class="ck-input" id="comment" rows="2" data-i18n-ph="app.ck.comment_ph" placeholder="Izoh (ixtiyoriy): podyezd, qavat, möljal"></textarea>
+      </div>
+
+      <div class="ck-card" id="contact-block">
+        <div class="ck-title"><span data-i18n="app.ck.recipient">👤 Oluvçi</span></div>
+        <input class="ck-input" id="name" autocomplete="name" data-i18n-ph="app.ck.name_ph" placeholder="Oluvçining ismi">
+        <label class="ck-input ck-phone"><b>+998</b><input id="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="90 123 45 67"></label>
+        <p class="ck-hint" data-i18n="app.ck.recipient_hint">Kuryer şu raqamga qönğiroq qiladi</p>
+      </div>
+
+      <div class="ck-card" id="inscription-block" hidden>
+        <div class="ck-title"><span>✍️ <span data-i18n="app.inscription">Tortga yozuv</span></span></div>
+        <input class="ck-input" id="inscription" maxlength="150" data-i18n-ph="app.inscription_ph" placeholder="Masalan: Tuğilgan kuning bilan, Madina!">
+        <p class="ck-hint" data-i18n="app.inscription_hint">Ixtiyoriy · 150 belgigaça</p>
+      </div>
+
+      <div class="ck-card">
+        <div class="ck-title"><span data-i18n="app.ck.payment">💳 Tölov usuli</span></div>
+        <div class="ck-pays">
+          <button type="button" class="ck-pay on" data-pay="CARD_TRANSFER">
+            <span class="ck-pay-ico">💳</span>
+            <span class="ck-map-text"><b data-i18n="app.pay.card">Kartaga ötkazma</b><small data-i18n="app.pay.card_hint">Çekni botga yuborasiz</small></span>
+            <span class="ck-radio"></span>
+          </button>
+          <button type="button" class="ck-pay" data-pay="CASH">
+            <span class="ck-pay-ico">💵</span>
+            <span class="ck-map-text"><b data-i18n="app.pay.cash">Naqd pul</b><small data-i18n="app.pay.cash_hint">Buyurtmani qabul qilganingizda tölaysiz</small></span>
+            <span class="ck-radio"></span>
+          </button>
+        </div>
+      </div>
+
+      <div id="checkout-summary"></div>
+    </form>
+  </section>
+
+  <!-- ============ MENING MANZILLARIM ============ -->
+  <section id="view-addresses" class="view home">
+    <div class="cart-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="cart-title" data-i18n="app.addresses">Manzillarim</h1>
+      <span></span>
+    </div>
+    <div id="addresses-list"></div>
+  </section>
+
+  <section id="view-address-edit" class="view home">
+    <div class="cart-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="cart-title" id="addr-title"></h1>
+      <span></span>
+    </div>
+    <div class="ck-card">
+      <div class="ck-title"><span data-i18n="app.addr_label">Nomi</span></div>
+      <div class="addr-presets" id="addr-presets"></div>
+      <input class="ck-input" id="addr-name" maxlength="40" data-i18n-ph="app.addr_name_ph" placeholder="Masalan: Onamning uyi">
+    </div>
+    <div class="ck-card">
+      <div class="ck-title"><span data-i18n="app.ck.address">📍 Yetkazib beriş manzili</span><em data-i18n="app.ck.required">majburiy</em></div>
+      <button type="button" class="ck-map" id="addr-map">
+        <span class="ck-map-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span>
+        <span class="ck-map-text"><b id="addr-map-title"></b><small id="addr-map-sub"></small></span>
+        <span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <input class="ck-input" id="addr-street" maxlength="500" data-i18n-ph="app.ck.street_ph" placeholder="Köça nomi, uy, xonadon (ixtiyoriy)">
+    </div>
+    <button class="cs-btn" id="addr-save" data-i18n="app.addr_save">Saqlaş</button>
+    <button class="addr-delete" id="addr-delete" data-i18n="app.addr_delete">Öçiriş</button>
+  </section>
+
+  <!-- ============ XARITA ============ -->
+  <section id="view-map" class="view map-view">
+    <div id="map"></div>
+    <div class="map-pin" aria-hidden="true">
+      <svg viewBox="0 0 40 52" width="40" height="52"><path d="M20 0C9 0 0 8.7 0 19.5 0 34 20 52 20 52s20-18 20-32.5C40 8.7 31 0 20 0z" fill="#85583A"/><circle cx="20" cy="19" r="7.5" fill="#fff"/></svg>
+      <span class="pin-shadow"></span>
+    </div>
+    <div class="map-top">
+      <button class="glass-btn" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="glass-title" data-i18n="app.map_title"></span>
+    </div>
+    <button class="glass-btn locate" id="btn-locate" aria-label="GPS">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 3L3 10.5l7.2 2.3L12.5 20z"/></svg>
+    </button>
+    <div class="map-card">
+      <div class="map-address" id="map-address" data-i18n="app.map_hint"></div>
+      <button class="btn primary" id="btn-map-ok" data-i18n="app.map_ok"></button>
+    </div>
+  </section>
+
+  <!-- ============ MUVAFFAQIYAT ============ -->
+  <section id="view-success" class="view home ok-view">
+    <div class="ok-hero">
+      <div class="check-circle"><svg viewBox="0 0 52 52"><path d="M15 27l7 7 15-15"/></svg></div>
+      <h2 data-i18n="app.thanks">Rahmat!</h2>
+      <p id="success-text"></p>
+    </div>
+    <div id="cancel-box"></div>
+    <div id="payment-box"></div>
+    <div class="ok-actions">
+      <button class="ok-ghost" id="btn-close" data-i18n="app.back_to_bot">Botga qaytiş</button>
+      <button class="ok-ghost" id="btn-more" data-i18n="app.back_to_menu">Menyuga qaytiş</button>
+    </div>
+  </section>
+
+  <!-- ============ PROFIL ============ -->
+  <section id="view-profile" class="view profile">
+    <h1 class="page-title" data-i18n="app.profile">Profil</h1>
+
+    <div class="p-hero">
+      <div class="p-hero-top">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div class="p-hero-text">
+          <div class="p-hello" id="profile-name"></div>
+          <div class="p-user" id="profile-user" hidden></div>
+          <div class="p-motto" data-i18n="app.profile_motto"></div>
+          <div class="p-phone" id="profile-phone"></div>
+        </div>
+      </div>
+      <div class="p-stats">
+        <button class="p-stat p-stat-link" id="btn-my-likes"><div class="p-stat-label"><span class="p-ico-sm heart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.4 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3.6 0 5.6 3.5 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg></span><small data-i18n="app.my_likes">Yoqtirganlarim</small></div><b class="p-likes-val"><span id="my-likes-count">0</span> <span data-i18n="app.likes_unit">ta</span></b></button>
+        <div class="p-stat"><div class="p-stat-label"><span class="p-ico-sm"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.8c0-1.2 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8c0 2.6-5 1.4-5 4.2 0 1.1 1.1 1.8 2.5 1.8s2.5-.6 2.5-1.8"/></svg></span><small data-i18n="app.stat.spent">Jami xaridlarim</small></div><b id="stat-spent">—</b></div>
+      </div>
+    </div>
+
+    <div class="p-duo">
+      <button class="p-duo-btn" id="btn-my-orders"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span class="p-duo-text"><b data-i18n="app.orders">Buyurtmalarim</b><small id="orders-total"></small><small class="p-pending" id="orders-pending" hidden></small></span><span class="p-duo-count" id="orders-pending-count"></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="p-duo-btn" id="btn-my-addresses"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span><span class="p-duo-text"><b data-i18n="app.addresses">Manzillarim</b><small id="addresses-total"></small></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </div>
+
+    <h2 class="p-section" data-i18n="app.section.settings"></h2>
+    <div class="p-list">
+      <button class="p-row" id="btn-lang"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span class="p-row-text"><b data-i18n="app.language"></b><small id="lang-current"></small></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </div>
+
+    <h2 class="p-section" data-i18n="app.section.info"></h2>
+    <div class="p-list">
+      <button class="p-row" id="btn-terms"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></span><span class="p-row-text"><b data-i18n="app.terms">Buyurtma şartlari</b></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="p-row" id="btn-contact"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><span class="p-row-text"><b data-i18n="app.contact_title"></b><small data-i18n="app.contact_hint"></small></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="p-row" id="btn-about"><span class="p-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></span><span class="p-row-text"><b data-i18n="app.about"></b></span><span class="go-arrow"><svg viewBox="0 0 12 20" width="7" height="12"><path d="M2 2l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </div>
+  </section>
+
+  <!-- ============ BUYURTMALARIM ============ -->
+  <section id="view-orders" class="view home orders-view">
+    <div class="cart-head">
+      <button class="sub-back" data-back aria-label="Orqaga"><svg viewBox="0 0 12 20" width="10" height="16"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h1 class="cart-title" data-i18n="app.orders">Buyurtmalarim</h1>
+      <span></span>
+    </div>
+    <div class="of-chips" id="orders-filter"></div>
+    <div id="orders-list"></div>
+  </section>
+
+  <!-- Pastki tablar: Asosiy / Savat / Profil -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab on" data-tab="menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3.2 3 10.4V20a1 1 0 0 0 1 1h5.5v-6h5v6H20a1 1 0 0 0 1-1v-9.6z"/></svg><span data-i18n="app.tab.home"></span></button>
+    <button class="tab" data-tab="cart"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 10.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6.2"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg><span data-i18n="app.tab.cart"></span><b class="tab-badge" id="tab-badge" hidden></b></button>
+    <button class="tab" data-tab="profile"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span data-i18n="app.tab.profile"></span></button>
+  </nav>
+
+  <!-- Pastki panel -->
+  <div class="bottom-bar" id="bottom-bar" hidden>
+    <button class="btn primary big" id="bottom-btn"></button>
+  </div>
+
+  <!-- Mahsulot oynasi -->
+  <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grip"></div>
+    <button class="sheet-close" id="sheet-close" aria-label="✕">✕</button>
+    <div id="sheet-body"></div>
+  </div>
+
+  <!-- Aloqa oynasi -->
+  <div class="sheet-backdrop" id="contact-backdrop" hidden></div>
+  <div class="sheet contact-sheet" id="contact-sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grip"></div>
+    <button class="sheet-back" data-sheet-back><svg viewBox="0 0 12 20" width="9" height="15"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">Orqaga</span></button>
+    <h3 class="lang-title contact-title" data-i18n="app.contact_title"></h3>
+    <div class="contact-sub">
+      <span data-i18n="app.contact.hours"></span>
+      <span data-i18n="app.contact.dastarkhan"></span>
+    </div>
+    <div class="menu-list" id="contact-list"></div>
+    <p class="contact-note" data-i18n="app.contact.note"></p>
+  </div>
+
+  <!-- Biz haqimizda oynasi -->
+  <div class="sheet-backdrop" id="about-backdrop" hidden></div>
+  <div class="sheet contact-sheet about-sheet" id="about-sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grip"></div>
+    <button class="sheet-back" data-sheet-back><svg viewBox="0 0 12 20" width="9" height="15"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">Orqaga</span></button>
+    <div class="about-logo">🧁</div>
+    <h3 class="lang-title">Habibi Bakery</h3>
+    <p class="about-text" data-i18n="app.about.text"></p>
+    <ul class="about-points">
+      <li data-i18n="app.about.p1"></li>
+      <li data-i18n="app.about.p2"></li>
+      <li data-i18n="app.about.p3"></li>
+      <li data-i18n="app.about.p4"></li>
+    </ul>
+    <button class="btn about-insta" id="btn-instagram" data-i18n="app.about.follow"></button>
+  </div>
+
+  <!-- Buyurtma shartlari oynasi -->
+  <div class="sheet-backdrop" id="terms-backdrop" hidden></div>
+  <div class="sheet contact-sheet terms-sheet" id="terms-sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grip"></div>
+    <button class="sheet-back" data-sheet-back><svg viewBox="0 0 12 20" width="9" height="15"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">Orqaga</span></button>
+    <div class="terms-body" id="terms-body"></div>
+  </div>
+
+  <!-- Til tanlash oynasi -->
+  <div class="sheet-backdrop" id="lang-backdrop" hidden></div>
+  <div class="sheet lang-sheet" id="lang-sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grip"></div>
+    <button class="sheet-back" data-sheet-back><svg viewBox="0 0 12 20" width="9" height="15"><path d="M10 2L2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="app.back">Orqaga</span></button>
+    <h3 class="lang-title" data-i18n="app.choose_language"></h3>
+    <div class="group" id="lang-options">
+      <button class="row row-btn" data-lang="uz"><span class="row-main"><span class="row-title">🇺🇿 Özbekça</span></span><span class="check">✓</span></button>
+      <button class="row row-btn" data-lang="cyr"><span class="row-main"><span class="row-title">🇺🇿 Ўзбекча</span></span><span class="check">✓</span></button>
+      <button class="row row-btn" data-lang="ru"><span class="row-main"><span class="row-title">🇷🇺 Русский</span></span><span class="check">✓</span></button>
+    </div>
+  </div>
+
+  <!-- Chek rasmini tanlash (Mini App ichida yuklash) -->
+  <input type="file" id="receipt-input" accept="image/*" hidden>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js?v=20261112m"></script>
+</body>
+</html>

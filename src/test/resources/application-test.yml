@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:habibi;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password: ""
+app:
+  timezone: Asia/Tashkent
+  dev-mode: false
+  bot:
+    token: ""
+    username: test_bot
+    admin-chat-id: 0
+    web-app-url: ""

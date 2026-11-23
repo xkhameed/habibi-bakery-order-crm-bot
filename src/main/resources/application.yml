@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: habibi-bakery
+  config:
+    # BOT_TOKEN va boshqa maxfiy qiymatlar loyiha ildizidagi .env faylidan o'qiladi
+    import: optional:file:.env[.properties]
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/habibi_bakery}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  threads:
+    virtual:
+      enabled: true
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          # Telegram eski app.js/dizaynni keshda saqlab qolmasligi uchun
+          no-cache: true
+  servlet:
+    multipart:
+      # Mini App'dan yuklanadigan chek rasmi
+      max-file-size: 10MB
+      max-request-size: 11MB
+
+server:
+  port: ${PORT:8080}
+
+app:
+  timezone: Asia/Tashkent
+  # true bo'lsa, Mini App'ni oddiy brauzerda (Telegram'siz) sinash mumkin
+  dev-mode: ${DEV_MODE:false}
+  bot:
+    token: ${BOT_TOKEN:}
+    username: ${BOT_USERNAME:}
+    admin-chat-id: ${ADMIN_CHAT_ID:0}
+    web-app-url: ${WEB_APP_URL:}
+  shop:
+    name: Habibi Bakery
+    phone: ${SHOP_PHONE:}
+    telegram: Habibibakery
+    instagram: habibi__bakery
+    group-url: https://t.me/+QYLgppypSqo1Nzgy
+    card-number: ${CARD_NUMBER:}
+    card-holder: ${CARD_HOLDER:}
+    # Buyurtmalar 11:00 dan 23:00 gacha (ish vaqtidan tashqari Mini App «yopiqmiz» deydi)
+    open-time: "11:00"
+    close-time: "23:00"
+    time-slots:
+      - "11:00–13:00"
+      - "13:00–15:00"
+      - "15:00–17:00"
+      - "17:00–19:00"
+      - "19:00–21:00"
+      - "21:00–23:00"
+    days-ahead: 7
